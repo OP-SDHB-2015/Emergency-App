@@ -23,10 +23,10 @@ public class HomePageActivity extends ActionBarActivity
         btnNotifications = (Button) findViewById(R.id.btnNotifications);
         btnContacts = (Button) findViewById(R.id.btnContacts);
 
-        btnNotifications.setOnClickListener(new clickHandler());
+        btnNotifications.setOnClickListener(new clickHandlerNotifications());
     }
 
-    public class clickHandler implements View.OnClickListener
+    public class clickHandlerNotifications implements View.OnClickListener
     {
         @Override
         public void onClick(View v)
@@ -34,6 +34,17 @@ public class HomePageActivity extends ActionBarActivity
             Intent notificationsIntent;
             notificationsIntent = new Intent(HomePageActivity.this, NotificationsActivity.class);
             startActivity(notificationsIntent);
+        }
+    }
+
+    public class clickHandlerContacts implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View v)
+        {
+            Intent contactsIntent;
+            contactsIntent = new Intent(HomePageActivity.this, ContactsActivity.class);
+            startActivity(contactsIntent);
         }
     }
 
