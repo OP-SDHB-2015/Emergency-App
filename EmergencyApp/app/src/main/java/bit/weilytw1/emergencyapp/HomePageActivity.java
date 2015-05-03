@@ -24,6 +24,7 @@ public class HomePageActivity extends ActionBarActivity
         btnContacts = (Button) findViewById(R.id.btnContacts);
 
         btnNotifications.setOnClickListener(new clickHandlerNotifications());
+        btnContacts.setOnClickListener(new clickHandlerContacts());
     }
 
     public class clickHandlerNotifications implements View.OnClickListener
