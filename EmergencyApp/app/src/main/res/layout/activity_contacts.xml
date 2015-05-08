@@ -48,10 +48,11 @@
                     android:orientation="horizontal">
 
                     <ListView
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:id="@+id/lstPersonal"
-                        android:footerDividersEnabled="true" />
+                        android:footerDividersEnabled="true"
+                        android:visibility="visible" />
                 </LinearLayout>
 
                 <LinearLayout
