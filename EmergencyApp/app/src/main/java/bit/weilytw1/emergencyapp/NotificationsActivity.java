@@ -2,6 +2,7 @@ package bit.weilytw1.emergencyapp;
 
 import android.app.Notification;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,6 +35,21 @@ public class NotificationsActivity extends ActionBarActivity
         NotificationAdapter adapter = new NotificationAdapter(this, R.layout.emergency_layout, notifications);
         lstNotifications = (ListView) findViewById(R.id.lstNotifications);
         lstNotifications.setAdapter(adapter);
+        lstNotifications.setOnItemClickListener(new itemClickHandler());
+    }
+
+    //////////////////////////////////////
+    //Click handler for notification list
+    //////////////////////////////////////
+    public class itemClickHandler implements AdapterView.OnItemClickListener
+    {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+        {
+            //Go to selected items notification page
+            Intent goToDetails = new Intent(NotificationsActivity.this, NotificationDetailsActivity.class);
+            startActivity(goToDetails);
+        }
     }
 
     //Custom adapter to return layout for notification list
@@ -68,9 +85,9 @@ public class NotificationsActivity extends ActionBarActivity
 
     public void initialiseEmergencies()
     {
-        notifications[0] = new Emergency("Snow Day!","Heavy snow fall today, if you are unable to make it to the hospital please contact us","Dunedin, Otago");
-        notifications[1] = new Emergency("Virus Outbreak!", "There is a virus outbreak at the Dunedin Hospital. Hospital is quarantined, no entry or release", "Dunedin, Otago");
-        notifications[2] = new Emergency("Earthquake!", "There has been another earthquake", "Christchurch");
+        notifications[0] = new Emergency("Snow Day!","Heavy snow fall today, if you are unable to make it to the hospital please contact us.","Dunedin, Otago");
+        notifications[1] = new Emergency("Virus Outbreak!", "There is a virus outbreak at the Dunedin Hospital. Hospital is quarantined, no entry or release.", "Dunedin, Otago");
+        notifications[2] = new Emergency("Earthquake!", "There has been another earthquake.", "Christchurch");
     }
 
     ////////////////

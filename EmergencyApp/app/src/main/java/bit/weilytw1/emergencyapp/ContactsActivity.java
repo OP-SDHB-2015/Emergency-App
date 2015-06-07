@@ -1,6 +1,7 @@
 package bit.weilytw1.emergencyapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,13 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 
 public class ContactsActivity extends ActionBarActivity
 {
     Contact[] contacts;
-    ListView lstPersonal;
+    TabHost tabContacts;
+    //ListView lstPersonal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -27,10 +30,22 @@ public class ContactsActivity extends ActionBarActivity
         contacts = new Contact[3];
         initialiseContacts();
 
+        tabContacts = (TabHost) findViewById(R.id.tabContacts);
+        TabHost.TabSpec personalTab = tabContacts.newTabSpec("Personal Tab");
+        TabHost.TabSpec SDHBTab = tabContacts.newTabSpec("SDHB Tab");
+
+        personalTab.setIndicator("Personal");
+        personalTab.setContent(new Intent(this, NotificationDetailsActivity.class));
+        //Set tab content eg. personalTab.setContent(new Intent(this, PersonalActivity.class));
+        SDHBTab.setIndicator("SDHB");
+        SDHBTab.setContent(new Intent(this, NotificationDetailsActivity.class));
+        tabContacts.addTab(personalTab);
+        tabContacts.addTab(SDHBTab);
+
         //Make contact adapter
-        PersonalContactAdapter adapter = new PersonalContactAdapter(this, R.layout.contact_layout, contacts);
-        lstPersonal = (ListView) findViewById(R.id.lstPersonal);
-        lstPersonal.setAdapter(adapter);
+        //PersonalContactAdapter adapter = new PersonalContactAdapter(this, R.layout.contact_layout, contacts);
+        //lstPersonal = (ListView) findViewById(R.id.lstPersonal);
+        //lstPersonal.setAdapter(adapter);
     }
 
     public class PersonalContactAdapter extends ArrayAdapter<Contact>
