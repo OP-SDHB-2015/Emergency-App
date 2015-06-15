@@ -5,10 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+import android.os.Handler;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-
-import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 /**
@@ -23,26 +22,16 @@ public class GcmMessageHandler extends IntentService
     String mes;
     private Handler handler;
 
-    public GcmMessageHandler(){
-        super("GcmMessageHandler");}
+    public GcmMessageHandler()
+    {
+        super("GcmMessageHandler");
+    }
 
     @Override
     public void onCreate()
     {
         super.onCreate();
-        handler = new Handler() {
-            @Override
-            public void close() {
-            }
-
-            @Override
-            public void flush() {
-            }
-
-            @Override
-            public void publish(LogRecord record) {
-            }
-        };
+        handler = new Handler();
     }
 
     @Override
@@ -57,13 +46,14 @@ public class GcmMessageHandler extends IntentService
 
         mes = extras.getString("title");
         showToast();
-        Log.i("GCM", "Recieved : (" + messageType + ") " + extras.getString("title"));
+        Log.i("GCM", "Received : (" + messageType + ") " + extras.getString("title"));
 
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
     public void showToast()
     {
+
         handler.post(new Runnable()
         {
             public void run()
