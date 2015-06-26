@@ -53,6 +53,18 @@
             android:name=".HomePageActivity"
             android:label="@string/title_activity_home_page" >
         </activity>
+        <activity
+            android:name=".NotificationsActivity"
+            android:label="@string/title_activity_notifications" >
+        </activity>
+        <activity
+            android:name=".ContactsActivity"
+            android:label="@string/title_activity_contacts" >
+        </activity>
+        <activity
+            android:name=".PersonalContactsActivity"
+            android:label="@string/title_activity_personal_contacts" >
+        </activity>
     </application>
 
 </manifest>
