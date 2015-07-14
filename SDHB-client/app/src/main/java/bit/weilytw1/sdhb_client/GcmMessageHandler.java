@@ -17,6 +17,9 @@ import android.widget.Toast;
 import android.os.Handler;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.LogRecord;
 
 /**
@@ -33,7 +36,16 @@ public class GcmMessageHandler extends IntentService
     String mes;
     //des stands for description
     String des;
+    //loc stands for location
+    String loc;
+    //time is the time of emergency
+    Date time;
+    //Bundle to hold incoming emergency data for NotificationsActivity
+    Bundle bundle;
+
     private Handler handler;
+    //Array to hold all notifications received on device
+    ArrayList<eNotification> notifications;
 
     public GcmMessageHandler()
     {
@@ -45,8 +57,17 @@ public class GcmMessageHandler extends IntentService
     {
         super.onCreate();
         handler = new Handler();
+        bundle = new Bundle();
+        //Initialise notifications array
+        notifications = new ArrayList<eNotification>();
+        //Clear the array
+        notifications.clear();
+
+        //Set default values for all fields
         mes = "Null";
         des = "Null";
+        loc = "Null";
+        time = new Date();
     }
 
     @Override
@@ -61,6 +82,16 @@ public class GcmMessageHandler extends IntentService
 
         mes = extras.getString("title");
         des = extras.getString("message");
+        loc = extras.getString("location"); //Returns null. Requires server field?
+
+        bundle.putString("title", mes);
+        bundle.putString("message", des);
+        bundle.putString("location", loc);
+
+        //Create a notification to store latest emergency
+        //eNotification n = new eNotification(mes, des, loc, time);
+        //add that notification to the array
+        //notifications.add(0, n);
 
         showToast();
         pushNotification();
@@ -82,8 +113,9 @@ public class GcmMessageHandler extends IntentService
 
     public void pushNotification()
     {
-        PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, NotificationsActivity.class), 0);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, NotificationsActivity.class).putExtras(bundle), PendingIntent.FLAG_UPDATE_CURRENT);
         Resources r = getResources();
+
         Notification notification = new NotificationCompat.Builder(this)
                 .setSmallIcon(android.R.drawable.ic_dialog_alert)
                 .setContentTitle(mes)
