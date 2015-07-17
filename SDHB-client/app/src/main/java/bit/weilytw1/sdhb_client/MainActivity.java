@@ -1,5 +1,6 @@
 package bit.weilytw1.sdhb_client;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.IntentService;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -52,6 +54,8 @@ public class MainActivity extends ActionBarActivity
 {
     //Class Properties
     Button btnGetRegID;
+    Button btnNotifications;
+    ProgressBar pbLoad;
     TextView txtDisplayRegID;
     GoogleCloudMessaging gcm;
     String regid;
@@ -63,8 +67,14 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Hide ActionBar
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
         btnGetRegID = (Button) findViewById(R.id.btnGetRegID);
+        btnNotifications = (Button) findViewById(R.id.btnNotifications);
         txtDisplayRegID = (TextView) findViewById(R.id.txtDisplayRegID);
+        pbLoad = (ProgressBar) findViewById(R.id.pbLoad);
 
         btnGetRegID.setOnClickListener(new View.OnClickListener()
         {
@@ -74,8 +84,19 @@ public class MainActivity extends ActionBarActivity
                 getRegId();
             }
         });
+        btnNotifications.setOnClickListener(new NotificationsHandler());
 
         //Check if Google Play Services installed on users device...
+    }
+
+    public class NotificationsHandler implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View v)
+        {
+            Intent intent = new Intent(MainActivity.this, NotificationsActivity.class);
+            startActivity(intent);
+        }
     }
 
     /**
@@ -84,6 +105,8 @@ public class MainActivity extends ActionBarActivity
      */
     public void getRegId()
     {
+        pbLoad.setVisibility(View.VISIBLE);
+        pbLoad.animate();
         new AsyncTask<Void, Void, String>()
         {
             @Override
@@ -97,7 +120,8 @@ public class MainActivity extends ActionBarActivity
                         gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
                     }
                     regid = gcm.register(PROJECT_NUMBER);
-                    msg = "Device registered, registration ID = " + regid;
+                    //msg = "Device registered, registration ID = " + regid;
+                    msg = "Device registered. You phone is now ready to receive notifications.";
                     Log.i("GCM", msg);
                     POSTregID(regid);
                 }
@@ -111,8 +135,10 @@ public class MainActivity extends ActionBarActivity
             protected void onPostExecute(String msg)
             {
                 txtDisplayRegID.setText(msg + "\n");
+                pbLoad.setVisibility(View.INVISIBLE);
             }
         }.execute(null, null, null);
+
 
     }
 

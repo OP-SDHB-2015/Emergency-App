@@ -9,6 +9,8 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.media.AudioManager;
+import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
@@ -113,6 +115,16 @@ public class GcmMessageHandler extends IntentService
 
     public void pushNotification()
     {
+
+        //Modify phones volume when notification received
+        AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION);
+        int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION); //Get current volume setting to revert back to after push notification
+
+        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+        audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, maxVolume, AudioManager.FLAG_SHOW_UI + AudioManager.FLAG_PLAY_SOUND);
+        //Finish increasing volume
+
         PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, NotificationsActivity.class).putExtras(bundle), PendingIntent.FLAG_UPDATE_CURRENT);
         Resources r = getResources();
 
@@ -122,10 +134,15 @@ public class GcmMessageHandler extends IntentService
                 .setContentText(des)
                 .setContentIntent(pi)
                 .setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .build();
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(0, notification);
+
+        //Revert phone audio volume back
+        audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, currentVolume, AudioManager.FLAG_SHOW_UI + AudioManager.FLAG_PLAY_SOUND);
 
 
 //        //For push notifications
