@@ -55,6 +55,7 @@ public class MainActivity extends ActionBarActivity
     //Class Properties
     Button btnGetRegID;
     Button btnNotifications;
+    Button btnContacts;
     ProgressBar pbLoad;
     TextView txtDisplayRegID;
     GoogleCloudMessaging gcm;
@@ -73,6 +74,7 @@ public class MainActivity extends ActionBarActivity
 
         btnGetRegID = (Button) findViewById(R.id.btnGetRegID);
         btnNotifications = (Button) findViewById(R.id.btnNotifications);
+        btnContacts = (Button) findViewById(R.id.btnContacts);
         txtDisplayRegID = (TextView) findViewById(R.id.txtDisplayRegID);
         pbLoad = (ProgressBar) findViewById(R.id.pbLoad);
 
@@ -85,6 +87,7 @@ public class MainActivity extends ActionBarActivity
             }
         });
         btnNotifications.setOnClickListener(new NotificationsHandler());
+        btnContacts.setOnClickListener(new ContactsHandler());
 
         //Check if Google Play Services installed on users device...
     }
@@ -95,6 +98,16 @@ public class MainActivity extends ActionBarActivity
         public void onClick(View v)
         {
             Intent intent = new Intent(MainActivity.this, NotificationsActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    public class ContactsHandler implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View v)
+        {
+            Intent intent = new Intent(MainActivity.this, ContactsActivity.class);
             startActivity(intent);
         }
     }
@@ -147,7 +160,7 @@ public class MainActivity extends ActionBarActivity
     // Create  POST id Method
     public  String  POSTregID(String regID)
     {
-        String urlString = "http://128.199.73.221:3000/emergency_notifications/registerID";
+        String urlString = "http://128.199.73.221:3000/users/registerID";
         String myJSONString = "";
         String userCredentials = "registrationID=" + regID;
         String result = "";
