@@ -53,14 +53,8 @@ import javax.net.ssl.HttpsURLConnection;
 public class MainActivity extends ActionBarActivity
 {
     //Class Properties
-    Button btnGetRegID;
     Button btnNotifications;
     Button btnContacts;
-    ProgressBar pbLoad;
-    TextView txtDisplayRegID;
-    GoogleCloudMessaging gcm;
-    String regid;
-    String PROJECT_NUMBER = "492814766742";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -72,20 +66,9 @@ public class MainActivity extends ActionBarActivity
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        btnGetRegID = (Button) findViewById(R.id.btnGetRegID);
         btnNotifications = (Button) findViewById(R.id.btnNotifications);
         btnContacts = (Button) findViewById(R.id.btnContacts);
-        txtDisplayRegID = (TextView) findViewById(R.id.txtDisplayRegID);
-        pbLoad = (ProgressBar) findViewById(R.id.pbLoad);
 
-        btnGetRegID.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                getRegId();
-            }
-        });
         btnNotifications.setOnClickListener(new NotificationsHandler());
         btnContacts.setOnClickListener(new ContactsHandler());
 
@@ -111,171 +94,6 @@ public class MainActivity extends ActionBarActivity
             startActivity(intent);
         }
     }
-
-    /**
-     * AsyncTask will register the app with GCM, receive registration id “RegID” & display it on EditText.
-     * Here you need to use the Project Number when communicating with GCM
-     */
-    public void getRegId()
-    {
-        pbLoad.setVisibility(View.VISIBLE);
-        pbLoad.animate();
-        new AsyncTask<Void, Void, String>()
-        {
-            @Override
-            protected String doInBackground(Void... params)
-            {
-                String msg = "";
-                try
-                {
-                    if(gcm == null)
-                    {
-                        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
-                    }
-                    regid = gcm.register(PROJECT_NUMBER);
-                    //msg = "Device registered, registration ID = " + regid;
-                    msg = "Device registered. You phone is now ready to receive notifications.";
-                    Log.i("GCM", msg);
-                    POSTregID(regid);
-                }
-                catch(IOException e)
-                {
-                    msg = "Error :" + e.getMessage();
-                }
-                return msg;
-            }
-            @Override
-            protected void onPostExecute(String msg)
-            {
-                txtDisplayRegID.setText(msg + "\n");
-                pbLoad.setVisibility(View.INVISIBLE);
-            }
-        }.execute(null, null, null);
-
-
-    }
-
-//----------------------------Sending Registered ID to Rails Server----------------------------------------------
-
-    // Create  POST id Method
-    public  String  POSTregID(String regID)
-    {
-        String urlString = "http://128.199.73.221:3000/users/registerID";
-        String myJSONString = "";
-        String userCredentials = "registrationID=" + regID;
-        String result = "";
-        try
-        {
-            URL postTestUrl = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) postTestUrl.openConnection();
-
-            // Configure for POST
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
-
-            // Configure for receiving a response
-            connection.setDoInput(true);
-
-            // Make an output stream to the remote machine using your HttpURLConnection object
-            OutputStream outputStream = connection.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-
-            // Write out your post data. Separate multiple key=value pairs with &
-            writer.write(userCredentials);
-
-            // Tidy up
-            writer.flush();
-            writer.close();
-            outputStream.close();
-
-
-            // Read the response in the usual way
-            int responseCode = connection.getResponseCode();
-
-            if (responseCode == 200)
-            {
-                result = "Success";
-            }
-            else
-            {
-                result = "failed cos " + responseCode;
-            }
-
-            connection.disconnect();
-
-        }
-        catch (UnsupportedEncodingException e)
-        {
-            e.printStackTrace();
-        }
-        catch (ClientProtocolException e)
-        {
-            e.printStackTrace();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        return result;
-
-    }
-
-    /*throws UnsupportedEncodingException
-    {
-        // Create data variable for sent values to server
-        String ID = URLEncoder.encode("Registration_ID", "UTF-8")
-                + "=" + URLEncoder.encode(regID, "UTF-8");
-
-        String text = "";
-        BufferedReader reader=null;
-
-        // Send data
-        try
-        {
-
-            // Defined URL  where to send data
-            URL url = new URL("http://128.199.73.221:3000/registerID");
-
-            // Send POST data request
-
-            URLConnection conn = url.openConnection();
-            conn.setDoOutput(true);
-            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-            wr.write( ID );
-            wr.flush();
-
-            // Get the server response
-
-            reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            StringBuilder sb = new StringBuilder();
-            String line = null;
-
-            // Read Server Response
-            while((line = reader.readLine()) != null)
-            {
-                // Append server response in string
-                sb.append(line + "\n");
-            }
-
-
-            text = sb.toString();
-        }
-        catch(Exception ex)
-        {
-
-        }
-        finally
-        {
-            try
-            {
-
-                reader.close();
-            }
-
-            catch(Exception ex) {}
-        }*/
-
-//---------------------------------------------------------------------------------------------------------------
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

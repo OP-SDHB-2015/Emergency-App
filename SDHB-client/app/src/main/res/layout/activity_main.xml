@@ -23,7 +23,6 @@
         android:id="@+id/txtDisplayRegID"
         android:textColor="@android:color/black"
         android:gravity="center"
-        android:layout_alignBottom="@+id/pbLoad"
         android:layout_centerHorizontal="true" />
 
     <TextView
@@ -56,15 +55,6 @@
         android:id="@+id/btnNotifications"
         style="@style/button_text"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
-
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/pbLoad"
-        android:visibility="invisible"
-        android:layout_marginTop="35dp"
-        android:layout_below="@+id/btnNotifications"
         android:layout_centerHorizontal="true" />
 
     <TextView

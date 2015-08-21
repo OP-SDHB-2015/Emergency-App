@@ -10,56 +10,102 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Username:"
-        android:id="@+id/textView"
-        android:layout_marginTop="166dp"
+        android:text="Staff ID :"
+        android:id="@+id/txtStaffID"
+        android:layout_marginLeft="39dp"
+        android:layout_marginStart="39dp"
+        android:layout_marginTop="43dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:paddingTop="13dp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/etUsername"
-        android:layout_alignTop="@+id/textView"
-        android:layout_toRightOf="@+id/textView"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Password:"
-        android:id="@+id/textView2"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:paddingTop="10dp" />
+        android:text="Last Name :"
+        android:id="@+id/txtLastName"
+        android:layout_marginTop="39dp"
+        android:layout_below="@+id/etStaffID"
+        android:layout_toLeftOf="@+id/etStaffID"
+        android:layout_toStartOf="@+id/etStaffID" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="First Name :"
+        android:id="@+id/txtFirstName"
+        android:layout_below="@+id/etLastName"
+        android:layout_alignRight="@+id/txtLastName"
+        android:layout_alignEnd="@+id/txtLastName"
+        android:layout_marginTop="41dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Region :"
+        android:id="@+id/txtRegion"
+        android:layout_marginTop="43dp"
+        android:layout_below="@+id/etFirstName"
+        android:layout_alignLeft="@+id/txtStaffID"
+        android:layout_alignStart="@+id/txtStaffID" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
+        android:inputType="number"
         android:ems="10"
-        android:id="@+id/etPassword"
-        android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/etUsername"
-        android:layout_alignStart="@+id/etUsername"
-        android:layout_alignRight="@+id/etUsername"
-        android:layout_alignEnd="@+id/etUsername" />
+        android:id="@+id/etStaffID"
+        android:layout_alignTop="@+id/txtStaffID"
+        android:layout_toRightOf="@+id/txtStaffID"
+        android:layout_toEndOf="@+id/txtStaffID" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/etLastName"
+        android:inputType="textCapSentences"
+        android:layout_alignTop="@+id/txtLastName"
+        android:layout_toRightOf="@+id/txtLastName"
+        android:layout_toEndOf="@+id/txtLastName" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Log In"
-        android:id="@+id/btnLogIn"
-        android:layout_marginTop="26dp"
-        android:background="#ff3980ff"
-        android:layout_below="@+id/etPassword"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/etPassword"
-        android:layout_alignEnd="@+id/etPassword" />
+        android:text="Register"
+        android:id="@+id/btnRegister"
+        android:layout_below="@+id/spnRegion"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="67dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textCapSentences"
+        android:ems="10"
+        android:id="@+id/etFirstName"
+        android:layout_alignTop="@+id/txtFirstName"
+        android:layout_alignLeft="@+id/etLastName"
+        android:layout_alignStart="@+id/etLastName" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/region_names"
+        android:id="@+id/spnRegion"
+        android:layout_alignBottom="@+id/txtRegion"
+        android:layout_toRightOf="@+id/txtStaffID"
+        android:layout_toEndOf="@+id/txtStaffID" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pbLoad"
+        android:visibility="invisible"
+        android:layout_below="@+id/spnRegion"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
