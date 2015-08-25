@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <permission
         android:name="com.example.gcm.permission.C2D_MESSAGE"
@@ -58,7 +58,7 @@
         <activity
             android:name=".NotificationsActivity"
             android:label="@string/title_activity_notifications"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity" >
         </activity>
         <activity
             android:name=".ContactsActivity"
@@ -67,6 +67,10 @@
         <activity
             android:name=".PersonalContactsActivity"
             android:label="@string/title_activity_personal_contacts" >
+        </activity>
+        <activity
+            android:name=".SdhbContactsActivity"
+            android:label="@string/title_activity_sdhb_contacts" >
         </activity>
     </application>
 

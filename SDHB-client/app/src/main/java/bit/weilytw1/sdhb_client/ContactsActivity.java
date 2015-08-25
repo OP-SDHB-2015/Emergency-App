@@ -32,10 +32,10 @@ public class ContactsActivity extends TabActivity
         TabHost.TabSpec tab1 = tabHost.newTabSpec("tabPersonal");
         TabHost.TabSpec tab2 = tabHost.newTabSpec("tabSDHB");
 
-        tab1.setIndicator("Tab1");
-        tab1.setContent(new Intent(this, NotificationsActivity.class));
-        tab2.setIndicator("Tab2");
-        tab2.setContent(new Intent(this, NotificationsActivity.class));
+        tab1.setIndicator("Personal");
+        tab1.setContent(new Intent(this, PersonalContactsActivity.class));
+        tab2.setIndicator("SDHB");
+        tab2.setContent(new Intent(this, SdhbContactsActivity.class));
 
         tabHost.addTab(tab1);
         tabHost.addTab(tab2);

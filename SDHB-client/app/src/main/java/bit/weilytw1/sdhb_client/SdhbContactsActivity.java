@@ -6,12 +6,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class PersonalContactsActivity extends ActionBarActivity {
+public class SdhbContactsActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_personal_contacts);
+        setContentView(R.layout.activity_sdhb_contacts);
 
         //Hide the action bar
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -22,7 +22,7 @@ public class PersonalContactsActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_personal_contacts, menu);
+        getMenuInflater().inflate(R.menu.menu_sdhb_contacts, menu);
         return true;
     }
 
