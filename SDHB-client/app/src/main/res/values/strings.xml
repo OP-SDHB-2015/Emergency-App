@@ -9,4 +9,6 @@
     <string name="title_activity_contacts">ContactsActivity</string>
     <string name="title_activity_personal_contacts">PersonalContactsActivity</string>
     <string name="title_activity_sdhb_contacts">SdhbContactsActivity</string>
+    <string name="login_prefs">LoginData</string>
+    <string name="contact_info">ContactInfo</string>
 </resources>

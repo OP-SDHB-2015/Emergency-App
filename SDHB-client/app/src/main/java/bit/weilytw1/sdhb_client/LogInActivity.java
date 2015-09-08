@@ -1,9 +1,13 @@
 package bit.weilytw1.sdhb_client;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +42,8 @@ public class LogInActivity extends ActionBarActivity
     Spinner spnRegion;
     Button btnRegister;
 
+    protected SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -52,6 +58,16 @@ public class LogInActivity extends ActionBarActivity
         btnRegister = (Button) findViewById(R.id.btnRegister);
         pbLoad = (ProgressBar) findViewById(R.id.pbLoad);
 
+        sharedPreferences = getSharedPreferences(getResources().getString(R.string.login_prefs), Context.MODE_PRIVATE);
+
+        //Check to see if user has already registered
+        if(sharedPreferences.getBoolean("loggedIn", false) == true)
+        {
+            //Redirect to main activity
+            Intent intent = new Intent(LogInActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
+
         btnRegister.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -64,7 +80,7 @@ public class LogInActivity extends ActionBarActivity
 
 //---------------------------------------------------------------------------------------------------------------
     /**
-     * AsyncTask will register the app with GCM, receive registration id “RegID” & display it on EditText.
+     * AsyncTask will register the app with GCM, receive registration id ï¿½RegIDï¿½ & display it on EditText.
      * Here you need to use the Project Number when communicating with GCM
      */
     public void getRegId()
@@ -100,6 +116,16 @@ public class LogInActivity extends ActionBarActivity
             protected void onPostExecute(String msg)
             {
                 pbLoad.setVisibility(View.INVISIBLE);
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("loggedIn", true);
+                editor.putString("userName", etFirstName.getText().toString());
+                //String[] stuff = "hi,there,tom".split(",");
+                editor.apply();
+
+                //Change to main activity (Home Screen)
+                Intent intent = new Intent(LogInActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         }.execute(null, null, null);
 

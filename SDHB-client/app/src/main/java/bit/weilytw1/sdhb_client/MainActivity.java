@@ -3,7 +3,9 @@ package bit.weilytw1.sdhb_client;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -55,6 +57,9 @@ public class MainActivity extends ActionBarActivity
     //Class Properties
     Button btnNotifications;
     Button btnContacts;
+    TextView tvWelcome;
+
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -66,8 +71,16 @@ public class MainActivity extends ActionBarActivity
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+        //Access shared preferences and retrieve username
+        sharedPreferences = getSharedPreferences(getResources().getString(R.string.login_prefs), Context.MODE_PRIVATE);
+        String userName = sharedPreferences.getString("userName", "unknown");
+
         btnNotifications = (Button) findViewById(R.id.btnNotifications);
         btnContacts = (Button) findViewById(R.id.btnContacts);
+        tvWelcome = (TextView) findViewById(R.id.tvWelcome);
+
+        //Customize main screen with users name
+        tvWelcome.setText("Welcome " + userName + ", enjoy the app.");
 
         btnNotifications.setOnClickListener(new NotificationsHandler());
         btnContacts.setOnClickListener(new ContactsHandler());
