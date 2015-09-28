@@ -76,7 +76,8 @@ public class PersonalContactsActivity extends ActionBarActivity
         String newContactNames;
         String newContactNumbers;
 
-        if(contactNamesList != null) {
+        if(contactNamesList != null)
+        {
             //Add new contact to contacts
             newContactNames = contactNamesList + contactName + ",";
             newContactNumbers = contactNumbersList + contactNumber + ",";

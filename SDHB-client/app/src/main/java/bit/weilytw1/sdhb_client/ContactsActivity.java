@@ -13,9 +13,11 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TabHost;
 
 import java.lang.reflect.Type;
+import java.util.zip.Inflater;
 
 
 public class ContactsActivity extends TabActivity
@@ -37,7 +39,8 @@ public class ContactsActivity extends TabActivity
         tab1.setIndicator("Personal");
         tab1.setContent(new Intent(this, PersonalContactsActivity.class));
         tab2.setIndicator("SDHB");
-        tab2.setContent(new Intent(this, SdhbContactsActivity.class));
+        View v = this.getLayoutInflater().inflate(R.layout.sdhb_contacts_fragment, null);
+        tab2.setContent(v.getId());
 
         tabHost.addTab(tab1);
         tabHost.addTab(tab2);
