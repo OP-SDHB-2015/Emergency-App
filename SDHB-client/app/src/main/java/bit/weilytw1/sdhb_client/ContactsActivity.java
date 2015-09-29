@@ -1,13 +1,14 @@
 package bit.weilytw1.sdhb_client;
 
 import android.app.ActionBar;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -20,10 +21,11 @@ import java.lang.reflect.Type;
 import java.util.zip.Inflater;
 
 
-public class ContactsActivity extends TabActivity
+public class ContactsActivity extends FragmentActivity
 {
     //Class Properties
-    TabHost tabHost;
+    //TabHost tabHost;
+    FragmentTabHost fTabHost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -31,6 +33,15 @@ public class ContactsActivity extends TabActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
+        fTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
+        fTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
+
+        fTabHost.addTab(fTabHost.newTabSpec("personal").setIndicator("Personal"),
+                        SdhbContactsFragment.class, null);
+        fTabHost.addTab(fTabHost.newTabSpec("sdhb").setIndicator("SDHB"),
+                        SdhbContactsFragment.class, null);
+
+        /**
         tabHost = (TabHost)findViewById(android.R.id.tabhost);
 
         TabHost.TabSpec tab1 = tabHost.newTabSpec("tabPersonal");
@@ -44,6 +55,7 @@ public class ContactsActivity extends TabActivity
 
         tabHost.addTab(tab1);
         tabHost.addTab(tab2);
+         **/
     }
 
     @Override
