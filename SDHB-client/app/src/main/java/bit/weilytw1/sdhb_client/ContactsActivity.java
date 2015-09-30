@@ -37,7 +37,7 @@ public class ContactsActivity extends FragmentActivity
         fTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
 
         fTabHost.addTab(fTabHost.newTabSpec("personal").setIndicator("Personal"),
-                        SdhbContactsFragment.class, null);
+                        PersonalContactsFragment.class, null);
         fTabHost.addTab(fTabHost.newTabSpec("sdhb").setIndicator("SDHB"),
                         SdhbContactsFragment.class, null);
 
