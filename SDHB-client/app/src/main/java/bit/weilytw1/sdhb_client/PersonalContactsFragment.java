@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by weilytw1 on 29/09/2015.
@@ -59,7 +60,8 @@ public class PersonalContactsFragment extends Fragment
         @Override
         public void onClick(View v)
         {
-            int index = btnRemove.getId();
+            int index = (Integer) v.getTag();
+            removeContact(index);
         }
     }
 
@@ -71,10 +73,38 @@ public class PersonalContactsFragment extends Fragment
         String contactNumbersList = sharedPreferences.getString("contactNumbers", null);
 
         //Split strings into string array
-        String[] names = contactNamesList.split(","); //CHANGE TO ARRAYLIST!!!!!
+        String[] names = contactNamesList.split(",");
         String[] numbers = contactNumbersList.split(",");
 
+        ArrayList<String> cNames = new ArrayList<String>();
+        ArrayList<String> cNumbers = new ArrayList<String>();
+
+        for(int i=0; i<names.length; i++)
+        {
+            cNames.add(names[i]);
+            cNumbers.add(numbers[i]);
+        }
+
         //Remove selected contact from list
+        cNames.remove(index);
+        cNumbers.remove(index);
+
+        String newContactNames = "";
+        String newContactNumbers = "";
+
+        for(int n=0; n<cNames.size(); n++)
+        {
+            newContactNames = newContactNames + cNames.get(n) + ",";
+            newContactNumbers = newContactNumbers + cNumbers.get(n) + ",";
+        }
+
+        //Repopulate array
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("contactNames", newContactNames);
+        editor.putString("contactNumbers", newContactNumbers);
+        editor.apply();
+
+        loadContacts();
     }
 
     public void addContact(String contactName, String contactNumber)
@@ -201,6 +231,40 @@ public class PersonalContactsFragment extends Fragment
                                     dialog.cancel();
                                 }
                             });
+
+            //Create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            //Show it
+            alertDialog.show();
+        }
+    }
+
+    public class BtnRemoveContactHandler implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View v)
+        {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+
+            alertDialogBuilder
+                    .setCancelable(true)
+                    .setMessage("Are you sure you want to delete this contact?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            //Remove contact
+                            int index = (Integer) getView().getTag();
+                            removeContact(index);
+                        }
+                    });
+                    /*.setPositiveButton("Yes",
+                            (dialog, id) -> {
+                                //Remove contact
+                                int index = (Integer) v.getTag();
+                                removeContact(index);
+                            });*/
 
             //Create alert dialog
             AlertDialog alertDialog = alertDialogBuilder.create();
