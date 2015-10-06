@@ -33,25 +33,25 @@ public class PersonalContactsFragment extends Fragment
     String[] contactNames = new String[0];
     String[] contactNumbers = new String[0];
     Contact[] contacts;
+    View v;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.personal_contacts_fragment, container, false);
+        v = inflater.inflate(R.layout.personal_contacts_fragment, container, false);
 
         //Get access to shared preferences -Contact Info-
         sharedPreferences = this.getActivity().getSharedPreferences("ContactInfo", Context.MODE_PRIVATE);
 
-        btnAddContact = (Button) view.findViewById(R.id.btnAddContact);
-        btnRemove = (Button) view.findViewById(R.id.btnRemove);
-        lvContacts = (ListView) view.findViewById(R.id.lvContacts);
+        btnAddContact = (Button) v.findViewById(R.id.btnAddContact);
+        lvContacts = (ListView) v.findViewById(R.id.lvContacts);
 
         //btnAddContact.setOnClickListener(new AddContactHandler());
         btnAddContact.setOnClickListener(new BtnAddContactHandler());
 
         loadContacts();
 
-        return view;
+        return v;
     }
 
     //This method removes the contact associated with it
@@ -60,11 +60,12 @@ public class PersonalContactsFragment extends Fragment
         @Override
         public void onClick(View v)
         {
-            int index = (Integer) v.getTag();
+            v.getParent();
+
+            int index = v.getId();
             removeContact(index);
         }
     }
-
 
     public void removeContact(int index)
     {
@@ -147,7 +148,7 @@ public class PersonalContactsFragment extends Fragment
 
             //Make custom adapter
             ContactArrayAdapter contactAdapter = new ContactArrayAdapter(getActivity(), R.layout.personal_contacts_fragment, contacts);
-            ListView contactsListView = (ListView) getActivity().findViewById(R.id.lvPersonalContacts);
+            ListView contactsListView = (ListView) v.findViewById(R.id.lvPersonalContacts);
             contactsListView.setAdapter(contactAdapter);
         }
     }
@@ -164,10 +165,13 @@ public class PersonalContactsFragment extends Fragment
         {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
 
-            View v = inflater.inflate(R.layout.contacts_listview, container, false);
+            View v = inflater.inflate(R.layout.personal_listview, container, false);
 
             TextView name = (TextView) v.findViewById(R.id.tvContactName);
             TextView number = (TextView) v.findViewById(R.id.tvContactNumber);
+
+            btnRemove = (Button) v.findViewById(R.id.btnRemove);
+            btnRemove.setOnClickListener(new BtnRemoveContactHandler(position));
 
             Contact contact = getItem(position);
 
@@ -241,8 +245,15 @@ public class PersonalContactsFragment extends Fragment
 
     public class BtnRemoveContactHandler implements View.OnClickListener
     {
+        private int index;
+
+        public BtnRemoveContactHandler(int index)
+        {
+            this.index = index;
+        }
+
         @Override
-        public void onClick(View v)
+        public void onClick(final View v)
         {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
@@ -255,10 +266,17 @@ public class PersonalContactsFragment extends Fragment
                         public void onClick(DialogInterface dialog, int which)
                         {
                             //Remove contact
-                            int index = (Integer) getView().getTag();
                             removeContact(index);
                         }
-                    });
+                    })
+                    .setNegativeButton("No",
+                        new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                dialog.cancel();
+                            }
+                        });
                     /*.setPositiveButton("Yes",
                             (dialog, id) -> {
                                 //Remove contact
