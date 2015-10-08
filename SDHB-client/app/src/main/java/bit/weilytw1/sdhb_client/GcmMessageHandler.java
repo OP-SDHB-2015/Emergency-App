@@ -95,7 +95,7 @@ public class GcmMessageHandler extends IntentService
         //add that notification to the array
         //notifications.add(0, n);
 
-        showToast();
+        //showToast();
         pushNotification();
         Log.i("GCM", "Received : (" + messageType + ") " + extras.getString("title"));
 

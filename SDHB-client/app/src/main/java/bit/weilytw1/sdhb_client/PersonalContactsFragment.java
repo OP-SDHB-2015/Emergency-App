@@ -7,9 +7,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,12 +50,33 @@ public class PersonalContactsFragment extends Fragment
         btnAddContact = (Button) v.findViewById(R.id.btnAddContact);
         lvContacts = (ListView) v.findViewById(R.id.lvContacts);
 
+        //Register listview for context menu
+        registerForContextMenu(lvContacts);
+
         //btnAddContact.setOnClickListener(new AddContactHandler());
         btnAddContact.setOnClickListener(new BtnAddContactHandler());
 
         loadContacts();
 
         return v;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+    {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        //Create context menu for personal contacts
+        if(v.getId() == R.id.lvPersonalContacts)
+        {
+            ListView lv = (ListView) v;
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            String[] menuItems = {"Dial", "Delete"};
+            for(int i=0; i<menuItems.length; i++)
+            {
+                menu.add(Menu.NONE,i, i, menuItems[i]);
+            }
+        }
     }
 
     //This method removes the contact associated with it
@@ -260,23 +285,19 @@ public class PersonalContactsFragment extends Fragment
             alertDialogBuilder
                     .setCancelable(true)
                     .setMessage("Are you sure you want to delete this contact?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                    {
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
+                        public void onClick(DialogInterface dialog, int which) {
                             //Remove contact
                             removeContact(index);
                         }
                     })
                     .setNegativeButton("No",
-                        new DialogInterface.OnClickListener()
-                        {
-                            public void onClick(DialogInterface dialog, int which)
-                            {
-                                dialog.cancel();
-                            }
-                        });
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
                     /*.setPositiveButton("Yes",
                             (dialog, id) -> {
                                 //Remove contact
