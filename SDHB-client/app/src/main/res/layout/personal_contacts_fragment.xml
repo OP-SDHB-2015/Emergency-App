@@ -15,7 +15,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_weight="0.97"
-        android:layout_above="@+id/btnAddContact" />
+        android:layout_above="@+id/btnAddContact"
+        android:longClickable="true"
+        android:clickable="true" />
 
     <Button
         style="?android:attr/buttonStyleSmall"

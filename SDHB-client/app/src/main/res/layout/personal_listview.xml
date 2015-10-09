@@ -21,18 +21,4 @@
             android:id="@+id/tvContactNumber" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="right">
-
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Remove"
-                android:id="@+id/btnRemove"/>
-
-    </LinearLayout>
 </LinearLayout>
