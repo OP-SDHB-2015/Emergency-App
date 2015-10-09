@@ -48,10 +48,8 @@ public class PersonalContactsFragment extends Fragment
         sharedPreferences = this.getActivity().getSharedPreferences("ContactInfo", Context.MODE_PRIVATE);
 
         btnAddContact = (Button) v.findViewById(R.id.btnAddContact);
-        lvContacts = (ListView) v.findViewById(R.id.lvContacts);
-
-        //Register listview for context menu
-        registerForContextMenu(lvContacts);
+        //lvContacts = (ListView) v.findViewById(R.id.lvContacts);
+        lvContacts = (ListView) v.findViewById(R.id.lvPersonalContacts);
 
         //btnAddContact.setOnClickListener(new AddContactHandler());
         btnAddContact.setOnClickListener(new BtnAddContactHandler());
@@ -65,13 +63,17 @@ public class PersonalContactsFragment extends Fragment
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
         super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.contacts_context_menu, menu);
 
         //Create context menu for personal contacts
-        if(v.getId() == R.id.lvPersonalContacts)
+        if(v.getId() == R.id.lvPersonalContacts) //Check this
         {
             ListView lv = (ListView) v;
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
             String[] menuItems = {"Dial", "Delete"};
+            menu.setHeaderTitle("What would you like to do?");
+
             for(int i=0; i<menuItems.length; i++)
             {
                 menu.add(Menu.NONE,i, i, menuItems[i]);
@@ -173,9 +175,17 @@ public class PersonalContactsFragment extends Fragment
 
             //Make custom adapter
             ContactArrayAdapter contactAdapter = new ContactArrayAdapter(getActivity(), R.layout.personal_contacts_fragment, contacts);
-            ListView contactsListView = (ListView) v.findViewById(R.id.lvPersonalContacts);
-            contactsListView.setAdapter(contactAdapter);
+            //ListView contactsListView = (ListView) v.findViewById(R.id.lvPersonalContacts);
+            lvContacts.setAdapter(contactAdapter);
         }
+        else
+        {
+            //Make custom adapter
+            ContactArrayAdapter contactAdapter = new ContactArrayAdapter(getActivity(), R.layout.personal_contacts_fragment, contacts);
+            //ListView contactsListView = (ListView) v.findViewById(R.id.lvPersonalContacts);
+            lvContacts.setAdapter(contactAdapter);
+        }
+        registerForContextMenu(lvContacts);
     }
 
     public class ContactArrayAdapter extends ArrayAdapter<Contact>
@@ -191,7 +201,6 @@ public class PersonalContactsFragment extends Fragment
             LayoutInflater inflater = LayoutInflater.from(getActivity());
 
             View v = inflater.inflate(R.layout.personal_listview, container, false);
-
             TextView name = (TextView) v.findViewById(R.id.tvContactName);
             TextView number = (TextView) v.findViewById(R.id.tvContactNumber);
 
@@ -204,6 +213,12 @@ public class PersonalContactsFragment extends Fragment
             number.setText(contact.getContactNumber());
 
             return v;
+        }
+
+
+        public void OnItemClick()
+        {
+            lvContacts.showContextMenu();
         }
     }
 
