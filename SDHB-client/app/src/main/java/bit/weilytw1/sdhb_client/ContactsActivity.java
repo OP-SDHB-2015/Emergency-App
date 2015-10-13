@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TabHost;
 
@@ -39,7 +40,9 @@ public class ContactsActivity extends FragmentActivity
         fTabHost.addTab(fTabHost.newTabSpec("personal").setIndicator("Personal"),
                         PersonalContactsFragment.class, null);
         fTabHost.addTab(fTabHost.newTabSpec("sdhb").setIndicator("SDHB"),
-                        SdhbContactsFragment.class, null);
+                SdhbContactsFragment.class, null);
+
+
 
         /**
         tabHost = (TabHost)findViewById(android.R.id.tabhost);
@@ -57,6 +60,8 @@ public class ContactsActivity extends FragmentActivity
         tabHost.addTab(tab2);
          **/
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -1,8 +1,11 @@
 package bit.weilytw1.sdhb_client;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -68,12 +71,26 @@ public class LogInActivity extends ActionBarActivity
             startActivity(intent);
         }
 
+
         btnRegister.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                getRegId();
+            //Check for internet connection
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                        connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
+                {
+                    getRegId();
+                }
+                else
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LogInActivity.this);
+                    builder.setTitle("Unable to connect to server");
+                    builder.setMessage("Please check your internet connection and try again.");
+                    builder.show();
+                }
             }
         });
     }
@@ -103,8 +120,7 @@ public class LogInActivity extends ActionBarActivity
                     //msg = "Device registered, registration ID = " + regid;
                     msg = "Device registered. You phone is now ready to receive notifications.";
                     Log.i("GCM", msg);
-                    POSTRegID(Integer.parseInt(etStaffID.getText().toString()), etLastName.getText().toString(), etFirstName.getText().toString(),spnRegion.getSelectedItem().toString(),regid);
-
+                    POSTRegID(Integer.parseInt(etStaffID.getText().toString()), etLastName.getText().toString(), etFirstName.getText().toString(), spnRegion.getSelectedItem().toString(), regid);
                 }
                 catch(IOException e)
                 {

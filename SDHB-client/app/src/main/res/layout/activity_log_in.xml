@@ -4,7 +4,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="bit.weilytw1.sdhb_client.LogInActivity">
+    tools:context="bit.weilytw1.sdhb_client.LogInActivity"
+    android:background="@color/background_colour">
 <ScrollView
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -79,13 +80,14 @@
         android:layout_toEndOf="@+id/txtLastName" />
 
     <Button
-        android:layout_width="wrap_content"
+        style="@style/button_text"
+        android:background="@drawable/blue_button"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Register"
         android:id="@+id/btnRegister"
-        android:layout_below="@+id/spnRegion"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="67dp" />
+        android:layout_below="@+id/pbLoad"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="wrap_content"

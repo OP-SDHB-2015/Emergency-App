@@ -88,6 +88,11 @@ public class MainActivity extends ActionBarActivity
         //Check if Google Play Services installed on users device...
     }
 
+    @Override
+    public void onBackPressed(){
+        //This method simply prevents users from returning back to log in activity
+    }
+
     public class NotificationsHandler implements View.OnClickListener
     {
         @Override

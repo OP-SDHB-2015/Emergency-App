@@ -49,6 +49,8 @@ public class GcmMessageHandler extends IntentService
     //Array to hold all notifications received on device
     ArrayList<eNotification> notifications;
 
+    int currentVolume;
+
     public GcmMessageHandler()
     {
         super("GcmMessageHandler");
@@ -100,6 +102,11 @@ public class GcmMessageHandler extends IntentService
         Log.i("GCM", "Received : (" + messageType + ") " + extras.getString("title"));
 
         GcmBroadcastReceiver.completeWakefulIntent(intent);
+
+        //Modify phones volume when notification received
+        AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        //Revert phone audio volume back
+        audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, currentVolume, AudioManager.FLAG_SHOW_UI + AudioManager.FLAG_PLAY_SOUND);
     }
 
     public void showToast()
@@ -119,7 +126,8 @@ public class GcmMessageHandler extends IntentService
         //Modify phones volume when notification received
         AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION);
-        int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION); //Get current volume setting to revert back to after push notification
+        //Get current volume setting to revert back to after push notification
+        currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
 
         audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
         audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, maxVolume, AudioManager.FLAG_SHOW_UI + AudioManager.FLAG_PLAY_SOUND);
@@ -140,9 +148,6 @@ public class GcmMessageHandler extends IntentService
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(0, notification);
-
-        //Revert phone audio volume back
-        audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, currentVolume, AudioManager.FLAG_SHOW_UI + AudioManager.FLAG_PLAY_SOUND);
 
 
 //        //For push notifications

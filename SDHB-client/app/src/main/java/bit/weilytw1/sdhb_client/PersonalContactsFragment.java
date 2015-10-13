@@ -3,7 +3,9 @@ package bit.weilytw1.sdhb_client;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -72,21 +74,23 @@ public class PersonalContactsFragment extends Fragment
 
     protected ContactArrayAdapter getContactsAdapter()
     {
-        String contactNamesList = sharedPreferences.getString("contactNames", null);
-        String contactNumbersList = sharedPreferences.getString("contactNumbers", null);
-        String[] contactNames = contactNamesList.split(",");
-        String[] contactNumbers = contactNumbersList.split(",");
-
         List<Contact> contacts = new ArrayList<Contact>();
+            String contactNamesList = sharedPreferences.getString("contactNames", null);
+            String contactNumbersList = sharedPreferences.getString("contactNumbers", null);
 
-        for (int index=0; index<contactNames.length; index++)
-        {
-            String contactName = contactNames[index];
-            String contactNumber = contactNumbers[index];
+        if(contactNamesList != null || contactNumbersList != null) {
+            String[] contactNames = contactNamesList.split(",");
+            String[] contactNumbers = contactNumbersList.split(",");
 
-            Contact currentContact = new Contact(contactName, contactNumber);
 
-            contacts.add(currentContact);
+            for (int index = 0; index < contactNames.length; index++) {
+                String contactName = contactNames[index];
+                String contactNumber = contactNumbers[index];
+
+                Contact currentContact = new Contact(contactName, contactNumber);
+
+                contacts.add(currentContact);
+            }
         }
 
         return new ContactArrayAdapter(getActivity(), R.layout.personal_contacts_fragment, contacts);
@@ -151,11 +155,46 @@ public class PersonalContactsFragment extends Fragment
                     switch (which)
                     {
                         case 0:
-                            //TODO: Add dial code here
                             Contact selectedContact = contactAdapter.getItem(position);
+                            String phoneNumber = selectedContact.getContactNumber();
+                            Intent callIntent = new Intent(Intent.ACTION_CALL);
+                            callIntent.setData(Uri.parse("tel:" + phoneNumber));
+                            startActivity(callIntent);
                             break;
                         case 1:
-                            //TODO: Add edit code here
+                            //Get the view
+                            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+                            View promptsView = layoutInflater.inflate(R.layout.add_contact_prompt, null);
+
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+
+                            //Set xml file to alert dialog builder
+                            alertDialogBuilder.setView(promptsView);
+
+                            final EditText userName = (EditText) promptsView.findViewById(R.id.etName);
+                            final EditText userNumber = (EditText) promptsView.findViewById(R.id.etNumber);
+
+                            //Set up dialog fragment
+                            alertDialogBuilder
+                                    .setCancelable(false)
+                                    .setPositiveButton("Edit",
+                                            new DialogInterface.OnClickListener()
+                                            {
+                                                public void onClick(DialogInterface dialog, int id)
+                                                {
+                                                    //Edit contact here...
+                                                    Contact currentContact = contactAdapter.getItem(position);
+                                                    currentContact.setContactName(userName.getText().toString());
+                                                    currentContact.setContactNumber(userNumber.getText().toString());
+                                                    saveContacts(contactAdapter);
+                                                }
+                                            })
+                                    .setNegativeButton("Cancel", null);
+
+                            //Create alert dialog
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+                            //Show it
+                            alertDialog.show();
                             break;
                         case 2:
                             removeContact(position);
