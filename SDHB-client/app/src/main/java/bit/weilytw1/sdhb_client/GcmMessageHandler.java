@@ -9,6 +9,7 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.os.Build;
@@ -104,9 +105,9 @@ public class GcmMessageHandler extends IntentService
         GcmBroadcastReceiver.completeWakefulIntent(intent);
 
         //Modify phones volume when notification received
-        AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        //AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         //Revert phone audio volume back
-        audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, currentVolume, AudioManager.FLAG_SHOW_UI + AudioManager.FLAG_PLAY_SOUND);
+        //audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, currentVolume, AudioManager.FLAG_SHOW_UI + AudioManager.FLAG_PLAY_SOUND);
     }
 
     public void showToast()
@@ -133,6 +134,7 @@ public class GcmMessageHandler extends IntentService
         audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, maxVolume, AudioManager.FLAG_SHOW_UI + AudioManager.FLAG_PLAY_SOUND);
         //Finish increasing volume
 
+        //Pending activity that opens Notifications activity and passes data when push notification clicked
         PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, NotificationsActivity.class).putExtras(bundle), PendingIntent.FLAG_UPDATE_CURRENT);
         Resources r = getResources();
 
