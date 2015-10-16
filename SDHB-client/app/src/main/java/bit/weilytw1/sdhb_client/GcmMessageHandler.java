@@ -103,11 +103,6 @@ public class GcmMessageHandler extends IntentService
         Log.i("GCM", "Received : (" + messageType + ") " + extras.getString("title"));
 
         GcmBroadcastReceiver.completeWakefulIntent(intent);
-
-        //Modify phones volume when notification received
-        //AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-        //Revert phone audio volume back
-        //audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, currentVolume, AudioManager.FLAG_SHOW_UI + AudioManager.FLAG_PLAY_SOUND);
     }
 
     public void showToast()
@@ -150,6 +145,29 @@ public class GcmMessageHandler extends IntentService
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(0, notification);
+
+        //Sleep for 3 second then set volume back to normal
+        Thread timerThread = new Thread()
+        {
+            public void run()
+            {
+                try
+                {
+                    sleep(3000);
+                }
+                catch(InterruptedException e)
+                {
+                    e.printStackTrace();
+                }finally
+                {
+                    //Modify phones volume when notification received
+                    AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+                    //Revert phone audio volume back
+                    audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, currentVolume, AudioManager.FLAG_SHOW_UI + AudioManager.FLAG_PLAY_SOUND);
+                }
+            }
+        };
+        timerThread.start();
 
 
 //        //For push notifications
