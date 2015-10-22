@@ -2,6 +2,7 @@ package bit.weilytw1.sdhb_client;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 public class NotificationsActivity extends ActionBarActivity
@@ -32,13 +34,18 @@ public class NotificationsActivity extends ActionBarActivity
     //Class Properties
     TextView eTitle;
     TextView eDescription;
+    TextView eDate;
+    ListView lvNotifications;
 
     String title;
     String description;
     String location;
+    String date;
 
-    ArrayList<eNotification> notifications;
+    List<eNotification> notifications; //Might need to be List<>
+    NotificationArrayAdapter notificationAdapter;
     eNotification currNotification;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,9 +53,12 @@ public class NotificationsActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
 
-        notifications = new ArrayList<eNotification>();
+        //Get access to shared preferences -Contact Info-
+        sharedPreferences = getSharedPreferences("NotificationInfo", Context.MODE_PRIVATE);
 
-        try {
+        //notifications = new List<eNotification>();
+
+        /*try {
             fetchEmergencies();
         } catch (IOException e) {
             e.printStackTrace();
@@ -64,48 +74,18 @@ public class NotificationsActivity extends ActionBarActivity
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
+
+        lvNotifications = (ListView) findViewById(R.id.lvEmergencies);
+
+        setupNotificationsListView();
 
         //Make custom adapter
-        notificationArrayAdapter adapter = new notificationArrayAdapter(this, R.layout.notification_custom_layout, notifications);
+        //notificationArrayAdapter adapter = new notificationArrayAdapter(this, R.layout.notification_custom_layout, notifications);
         //Get a reference to the NotificationsActivity ListView
-        ListView lvEmergencies = (ListView) findViewById(R.id.lvEmergencies);
+        //ListView lvEmergencies = (ListView) findViewById(R.id.lvEmergencies);
         //Set the ListView's adapter
-        lvEmergencies.setAdapter(adapter);
-    }
-
-    //Custom adapter to return layout with two TextViews
-    public class notificationArrayAdapter extends ArrayAdapter<eNotification>
-    {
-
-        public notificationArrayAdapter(Context context, int resource, ArrayList<eNotification> objects)
-        {
-            super(context, resource, objects);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup container)
-        {
-            //Get a layout inflater
-            LayoutInflater inflater = LayoutInflater.from(NotificationsActivity.this);
-
-            //Inflate notification_custom_layout and store the returned View in a variable
-            View customView = inflater.inflate(R.layout.notification_custom_layout, container, false);
-
-            //Get references to the controls in the notification_custom_layout
-            eTitle = (TextView) customView.findViewById(R.id.txtTitle);
-            eDescription = (TextView) customView.findViewById(R.id.txtDescription);
-
-            //Get the current eNotification instance. Use the Adapter base class's getItem command
-            eNotification cn = getItem(getCount() - position - 1);
-
-            //Use the data fields of the current eNotification instance to initialise the View controls correctly
-            eTitle.setText(cn.getTitle());
-            eDescription.setText(cn.getDescription());
-
-            //Return the customView
-            return customView;
-        }
+        //lvEmergencies.setAdapter(adapter);
     }
 
     private void initialiseEmergencyArray()
@@ -114,10 +94,73 @@ public class NotificationsActivity extends ActionBarActivity
         Intent intent = getIntent();
         title = intent.getStringExtra("title");
         description = intent.getStringExtra("message");
+        date = intent.getStringExtra("time");
         location = intent.getStringExtra("location");
 
-        currNotification = new eNotification(title, description, location, new Date());
+        currNotification = new eNotification(title, description, location, date);
         notifications.add(currNotification);
+    }
+
+    public class NotificationArrayAdapter extends ArrayAdapter<eNotification>
+    {
+        public NotificationArrayAdapter(Context context, int resource, List<eNotification> objects)
+        {
+            super(context, resource, objects);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup container)
+        {
+            LayoutInflater inflater = LayoutInflater.from(NotificationsActivity.this);
+
+            View v = inflater.inflate(R.layout.notification_custom_layout, container, false);
+            TextView title = (TextView) v.findViewById(R.id.txtTitle);
+            TextView description = (TextView) v.findViewById(R.id.txtDescription);
+            TextView date = (TextView) v.findViewById(R.id.txtTime);
+
+            eNotification notification = getItem(position);
+
+            title.setText(notification.getTitle());
+            description.setText(notification.getDescription());
+            date.setText(notification.getDate());
+
+            return v;
+        }
+    }
+
+    protected void setupNotificationsListView()
+    {
+        //Make custom adapter
+        notificationAdapter = getNotificationsAdapter();
+
+        lvNotifications.setAdapter(notificationAdapter);
+    }
+
+    //Fetch notifications from shared preferences
+    protected NotificationArrayAdapter getNotificationsAdapter()
+    {
+        List<eNotification> notifications = new ArrayList<eNotification>();
+        String notificationTitles = sharedPreferences.getString("eTitles", null);
+        String notificationDescriptions = sharedPreferences.getString("eDescriptions", null);
+        String notificationDates = sharedPreferences.getString("eDates", null);
+
+        if(notificationTitles != null || notificationDescriptions != null || notificationDates != null)
+        {
+            String[] eTitles = notificationTitles.split(",");
+            String[] eDescriptions = notificationDescriptions.split(",");
+            String[] eDates = notificationDates.split(",");
+
+            for(int index=0; index<eTitles.length; index++)
+            {
+                String currentTitle = eTitles[index];
+                String currentDescription = eDescriptions[index];
+                String currentDate = eDates[index];
+
+                eNotification currentNotification = new eNotification(currentTitle, currentDescription, null, currentDate);
+                notifications.add(currentNotification);
+            }
+        }
+        return new NotificationArrayAdapter(NotificationsActivity.this, R.layout.notification_custom_layout, notifications);
     }
 
     /**
@@ -162,8 +205,9 @@ public class NotificationsActivity extends ActionBarActivity
             JSONObject currentEmergency = eArray.getJSONObject(index);
             String title = currentEmergency.getString("title");
             String description = currentEmergency.getString("description");
+            String date = currentEmergency.getString("date");
 
-            eNotification currentNotification = new eNotification(title, description, null, new Date());
+            eNotification currentNotification = new eNotification(title, description, null, date);
             notifications.add(currentNotification);
         }
     }

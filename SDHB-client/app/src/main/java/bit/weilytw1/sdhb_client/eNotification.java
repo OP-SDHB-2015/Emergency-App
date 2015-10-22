@@ -14,14 +14,14 @@ public class eNotification implements Parcelable
     String title;
     String description;
     String location;
-    Date time;
+    String date;
 
-    public eNotification(String title, String description, String location, Date time)
+    public eNotification(String title, String description, String location, String date)
     {
         this.title = title;
         this.description = description;
         this.location = location;
-        this.time = time;
+        this.date = date;
     }
 
     //Parcelable methods
@@ -41,6 +41,7 @@ public class eNotification implements Parcelable
 
     public String getTitle(){return title;}
     public String getDescription(){return description;}
+    public String getDate(){return date;}
 
     public static final Creator<eNotification> CREATOR = new Creator<eNotification>() {
         @Override

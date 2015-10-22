@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
@@ -21,6 +22,7 @@ import android.os.Handler;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.LogRecord;
@@ -43,12 +45,14 @@ public class GcmMessageHandler extends IntentService
     String loc;
     //time is the time of emergency
     Date time;
+    String date;
     //Bundle to hold incoming emergency data for NotificationsActivity
     Bundle bundle;
 
     private Handler handler;
     //Array to hold all notifications received on device
     ArrayList<eNotification> notifications;
+    SharedPreferences sharedPreferences;
 
     int currentVolume;
 
@@ -68,11 +72,45 @@ public class GcmMessageHandler extends IntentService
         //Clear the array
         notifications.clear();
 
+        sharedPreferences = getSharedPreferences("NotificationInfo", Context.MODE_PRIVATE);
+
         //Set default values for all fields
         mes = "Null";
         des = "Null";
         loc = "Null";
-        time = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
+        date = sdf.format(new Date());
+    }
+
+    public void addEmergency(String title, String description, String date)
+    {
+        String notificationTitles = sharedPreferences.getString("eTitles", null);
+        String notificationDescriptions = sharedPreferences.getString("eDescriptions", null);
+        String notificationDates = sharedPreferences.getString("eDates", null);
+
+        String net;
+        String ned;
+        String neds;
+
+        if(notificationTitles != null)
+        {
+            //Add new notification
+            net = notificationTitles + title + ",";
+            ned = notificationDescriptions + description + ",";
+            neds = notificationDates + date + ",";
+        }
+        else
+        {
+            net = title + ",";
+            ned = description + ",";
+            neds = date + ",";
+        }
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("eTitles", net);
+        editor.putString("eDescriptions", ned);
+        editor.putString("eDates", neds);
+        editor.apply();
     }
 
     @Override
@@ -130,14 +168,16 @@ public class GcmMessageHandler extends IntentService
         //Finish increasing volume
 
         //Pending activity that opens Notifications activity and passes data when push notification clicked
-        PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, NotificationsActivity.class).putExtras(bundle), PendingIntent.FLAG_UPDATE_CURRENT);
+        //PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, NotificationsActivity.class).putExtras(bundle), PendingIntent.FLAG_UPDATE_CURRENT);
         Resources r = getResources();
+
+        addEmergency(mes, des, date);
 
         Notification notification = new NotificationCompat.Builder(this)
                 .setSmallIcon(android.R.drawable.ic_dialog_alert)
                 .setContentTitle(mes)
                 .setContentText(des)
-                .setContentIntent(pi)
+                //.setContentIntent(pi)
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
