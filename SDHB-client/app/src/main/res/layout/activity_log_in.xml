@@ -25,7 +25,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:paddingBottom="6dp" />
+        android:paddingBottom="6dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -71,17 +71,20 @@
         android:layout_alignBottom="@+id/txtStaffID"
         android:layout_toRightOf="@+id/txtStaffID"
         android:layout_toEndOf="@+id/txtStaffID"
-        android:layout_alignTop="@+id/txtStaffID" />
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
+        android:digits="0123456789"/>
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:id="@+id/etLastName"
-        android:inputType="textCapSentences"
+        android:inputType="textCapWords"
         android:layout_alignBottom="@+id/txtLastName"
         android:layout_toRightOf="@+id/txtLastName"
-        android:layout_toEndOf="@+id/txtLastName" />
+        android:layout_toEndOf="@+id/txtLastName"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz- "/>
 
     <Button
         style="@style/button_text"
@@ -96,12 +99,13 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textCapSentences"
         android:ems="10"
         android:id="@+id/etFirstName"
         android:layout_alignBottom="@+id/txtFirstName"
         android:layout_toRightOf="@+id/txtFirstName"
-        android:layout_toEndOf="@+id/txtFirstName" />
+        android:layout_toEndOf="@+id/txtFirstName"
+        android:inputType="textCapWords"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz- "/>
 
     <Spinner
         android:layout_width="wrap_content"

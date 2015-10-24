@@ -53,7 +53,7 @@ public class LogInActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
-        //Setup
+        //Setup login form
         etStaffID = (EditText) findViewById(R.id.etStaffID);
         etLastName = (EditText) findViewById(R.id.etLastName);
         etFirstName = (EditText) findViewById(R.id.etFirstName);
@@ -61,6 +61,7 @@ public class LogInActivity extends ActionBarActivity
         btnRegister = (Button) findViewById(R.id.btnRegister);
         pbLoad = (ProgressBar) findViewById(R.id.pbLoad);
 
+        //Get access to shared preferences
         sharedPreferences = getSharedPreferences(getResources().getString(R.string.login_prefs), Context.MODE_PRIVATE);
 
         //Check to see if user has already registered
@@ -71,24 +72,35 @@ public class LogInActivity extends ActionBarActivity
             startActivity(intent);
         }
 
-
+        //What should happen when Register button is clicked
         btnRegister.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-            //Check for internet connection
+                //Check for internet connection
                 ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+
+                //If any field is left empty prompt user to complete form
+                if(etFirstName.getText().toString().trim().length() == 0 || etLastName.getText().toString().trim().length() == 0 || etStaffID.getText().toString().trim().length() == 0)
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LogInActivity.this);
+                    builder.setTitle("Form incomplete");
+                    builder.setMessage("Please complete the form and try again. All fields required.");
+                    builder.setPositiveButton("Ok", null);
+                    builder.show();
+                } //Else if a network connection is available, if so register the users device to server
+                else if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                         connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED)
                 {
                     getRegId();
-                }
+                } //Else if a connection is not available, prompt user to check their connection
                 else
                 {
                     AlertDialog.Builder builder = new AlertDialog.Builder(LogInActivity.this);
                     builder.setTitle("Unable to connect to server");
                     builder.setMessage("Please check your internet connection and try again.");
+                    builder.setPositiveButton("Ok", null);
                     builder.show();
                 }
             }

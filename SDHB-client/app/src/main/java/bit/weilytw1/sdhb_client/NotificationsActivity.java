@@ -56,36 +56,11 @@ public class NotificationsActivity extends ActionBarActivity
         //Get access to shared preferences -Contact Info-
         sharedPreferences = getSharedPreferences("NotificationInfo", Context.MODE_PRIVATE);
 
-        //notifications = new List<eNotification>();
-
-        /*try {
-            fetchEmergencies();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        initialiseEmergencyArray();
-
-        try {
-            convertToJSON();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
+        //Initialise ListView
         lvNotifications = (ListView) findViewById(R.id.lvEmergencies);
 
+        //Gather emergencies and display them
         setupNotificationsListView();
-
-        //Make custom adapter
-        //notificationArrayAdapter adapter = new notificationArrayAdapter(this, R.layout.notification_custom_layout, notifications);
-        //Get a reference to the NotificationsActivity ListView
-        //ListView lvEmergencies = (ListView) findViewById(R.id.lvEmergencies);
-        //Set the ListView's adapter
-        //lvEmergencies.setAdapter(adapter);
     }
 
     private void initialiseEmergencyArray()
@@ -101,6 +76,9 @@ public class NotificationsActivity extends ActionBarActivity
         notifications.add(currNotification);
     }
 
+    /**
+     *
+     */
     public class NotificationArrayAdapter extends ArrayAdapter<eNotification>
     {
         public NotificationArrayAdapter(Context context, int resource, List<eNotification> objects)

@@ -168,7 +168,7 @@ public class GcmMessageHandler extends IntentService
         //Finish increasing volume
 
         //Pending activity that opens Notifications activity and passes data when push notification clicked
-        //PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, NotificationsActivity.class).putExtras(bundle), PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, NotificationsActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
         Resources r = getResources();
 
         addEmergency(mes, des, date);
@@ -177,7 +177,7 @@ public class GcmMessageHandler extends IntentService
                 .setSmallIcon(android.R.drawable.ic_dialog_alert)
                 .setContentTitle(mes)
                 .setContentText(des)
-                //.setContentIntent(pi)
+                .setContentIntent(pi)
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
@@ -208,26 +208,5 @@ public class GcmMessageHandler extends IntentService
             }
         };
         timerThread.start();
-
-
-//        //For push notifications
-//        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-//                .setContentTitle(mes)
-//                .setContentText(des);
-//        //Creates an explicit intent for the Notifications activity
-//        Intent notificationIntent = new Intent(this, NotificationsActivity.class);
-//        /**The stackBuilder object contains an
-//         * artificial back stack for the started activity
-//         *This ensures that navigating backward from the
-//         * activity leads out of the application to the home screen**/
-//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-//        //Adds the back stack for the Intent (But not the Intent itself)
-//        stackBuilder.addParentStack(HomePageActivity.class);
-//        //Adds the Intent that starts the Activity to the top of the stack
-//        stackBuilder.addNextIntent(notificationIntent);
-//        PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-//        mBuilder.setContentIntent(notificationPendingIntent);
-//        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//        mNotificationManager.notify(0, mBuilder.build());
     }
 }
