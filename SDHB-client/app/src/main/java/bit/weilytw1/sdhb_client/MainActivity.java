@@ -82,7 +82,7 @@ public class MainActivity extends ActionBarActivity
         tvWelcome = (TextView) findViewById(R.id.tvWelcome);
 
         //Customize main screen with users name
-        tvWelcome.setText("Welcome " + userName + ", enjoy the app.");
+        tvWelcome.setText("Welcome " + userName + ". Thank you for registering. Your phone is now ready to receive notifications.");
 
         btnNotifications.setOnClickListener(new NotificationsHandler());
         btnContacts.setOnClickListener(new ContactsHandler());

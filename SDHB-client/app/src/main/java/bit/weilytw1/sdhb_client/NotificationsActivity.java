@@ -128,7 +128,7 @@ public class NotificationsActivity extends ActionBarActivity
             String[] eDescriptions = notificationDescriptions.split(",");
             String[] eDates = notificationDates.split(",");
 
-            for(int index=0; index<eTitles.length; index++)
+            for(int index=eTitles.length-1; index>=0; index--)
             {
                 String currentTitle = eTitles[index];
                 String currentDescription = eDescriptions[index];
